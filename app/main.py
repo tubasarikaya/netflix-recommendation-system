@@ -3,17 +3,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from .routers import users, movies, recommendations
 from .database import engine
 from .models import models
+from .config import settings
 
-# Create database tables
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="Netflix Recommendation System",
-    description="Movie/Series recommendation system based on user viewing preferences",
-    version="1.0.0"
+    title=settings.API_TITLE,
+    description=settings.API_DESCRIPTION,
+    version=settings.API_VERSION
 )
 
-# Configure CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -22,7 +21,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers
 app.include_router(users.router)
 app.include_router(movies.router)
 app.include_router(recommendations.router)
